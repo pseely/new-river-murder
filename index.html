@@ -116,6 +116,7 @@ th{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;col
 td:first-child{font-weight:600;white-space:nowrap}
 td.k{font:12px var(--f-mono);color:var(--muted);white-space:nowrap}
 tr:last-child td{border-bottom:0}
+ul.srcdocs{margin:0 0 8px;padding-left:20px}ul.srcdocs li{margin:4px 0}ul.srcdocs a{color:var(--accent)}
 dl.key{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
 dl.key dt{font:500 13px var(--f-mono);color:var(--accent)}
 dl.key dd{margin:0}
@@ -166,7 +167,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px}
 <div id="sources-view" hidden>
 <h2 class="sec" style="margin-top:28px">Source documents</h2>
 <p class="sub">Click <b>▣ view</b> to see the original page, or <b>↗ online</b> to open the record on another website.</p>
-<dl class="key" id="keylist"></dl>
+<ul class="srcdocs" id="keylist"></ul>
 <h2 class="sec">Source images</h2>
 <p class="sub" id="gal-intro"></p>
 <div id="gallery"></div>
@@ -229,7 +230,8 @@ render();
 $('#people').innerHTML = DATA.people.map(g => `<h3 class="grp">${esc(g.group)}</h3><div class="people">` + g.people.map(p => `<div class="person"><h4>${esc(p.name)}</h4><p>${esc(p.text)}</p></div>`).join('') + `</div>`).join('');
 $('#conf').innerHTML = DATA.conflicts.map(([q,a,s]) => `<tr><td>${esc(q)}</td><td>${esc(a)}</td></tr>`).join('');
 const shown = x => x.replace(/\s*·\s*photos? \d{4}(?:[–-]\d{4})?/g,'').replace(/\s*\(?photos? \d{4}(?:[–-]\d{4})?\)?/g,'').replace(/·\s*file 07 \((?:Sullivan scrapbook|summary)\)/g,'· Sullivan scrapbook').replace(/\s*·\s*file \d\d\b(?:\s*\([^)]*\))?/g,'');
-$('#keylist').innerHTML = Object.entries(S).map(([k,[t,f]]) => `<dt>${f}</dt><dd>${esc(shown(t))}</dd>`).join('');
+const DOCURL = {WEB:'https://www.davidsullivan.ca/scrapbook/executions/dowd.html', FS:'https://www.familysearch.org/'};
+$('#keylist').innerHTML = Object.entries(S).map(([k,[t]]) => { const txt=esc(t.replace(/\s*—\s*typed transcriptions/,'')); return `<li>${DOCURL[k]?`<a href="${DOCURL[k]}" target="_blank" rel="noopener">${txt}</a>`:txt}</li>`; }).join('');
 const IMG = DATA.images, BYID = Object.fromEntries(IMG.map((m,i)=>[m.id,i]));
 function idsFor(label){
   const m = label.match(/photos? (\d{4})(?:[–-](\d{4}))?/);
